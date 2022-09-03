@@ -58,7 +58,7 @@ stages:
         script: |
           pip3 install checkov
           terraform show -json ${{ parameters.backendAzureRmKey }}  > tf.json 
-          checkov -f tf.json
+          checkov --directory $(System.DefaultWorkingDirectory) -out junitxml > $(System.DefaultWorkingDirectory)/Result.xml
     
     - task: PowerShell@2
       displayName: detect any terraform change in the plan
