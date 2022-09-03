@@ -57,7 +57,7 @@ stages:
         targetType: 'inline'
         script: |
           pip3 install checkov
-          checkov -d $(System.DefaultWorkingDirectory) -out junitxml > $(System.DefaultWorkingDirectory)/Result.xml
+          checkov -d $(System.DefaultWorkingDirectory) -o junitxml > $(System.DefaultWorkingDirectory)/Result.xml
     
     - task: PowerShell@2
       displayName: detect any terraform change in the plan
