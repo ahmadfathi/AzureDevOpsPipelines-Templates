@@ -51,6 +51,16 @@ stages:
         environmentServiceNameAzureRM: ${{ parameters.backendServiceArm }}
     
     - task: PowerShell@2
+      displayName: terraform security scan 
+      inputs:
+        workingDirectory: ${{ parameters.workingDirectory }}
+        targetType: 'inline'
+        script: |
+          pip3 install checkov
+          terraform show -json ${{ parameters.backendAzureRmKey }}  > tf.json 
+          checkov -f tf.json
+    
+    - task: PowerShell@2
       displayName: detect any terraform change in the plan
       inputs:
         workingDirectory: ${{ parameters.workingDirectory }}
