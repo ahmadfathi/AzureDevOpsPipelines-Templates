@@ -57,7 +57,13 @@ stages:
         targetType: 'inline'
         script: |
           pip3 install checkov
-    
+    - task: Bash@3
+      displayName: install required testresources 
+      inputs:
+        targetType: 'inline'
+        script: |
+          sudo apt-get update
+          sudo apt-get install python3-testresources
     - task: PowerShell@2
       displayName: terraform security scan 
       inputs:
