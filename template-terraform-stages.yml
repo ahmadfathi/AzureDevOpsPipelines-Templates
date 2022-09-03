@@ -24,7 +24,7 @@ stages:
 
     steps:
     - script: |
-          docker run --tty --rm --volume $(System.DefaultWorkingDirectory)/${{ parameters.workingDirectory }}:/tf --workdir /tf bridgecrew/checkov --directory /tf --compact
+          docker run --tty --rm --volume $(System.DefaultWorkingDirectory):/tf --workdir /tf bridgecrew/checkov --directory /tf --compact
       displayName: static code analysis for terraform
   
         
