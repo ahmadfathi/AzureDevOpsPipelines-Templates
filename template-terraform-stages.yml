@@ -51,14 +51,28 @@ stages:
         environmentServiceNameAzureRM: ${{ parameters.backendServiceArm }}
     
     - task: PowerShell@2
+      displayName: checkov install to tf security scan 
+      inputs:
+        workingDirectory: ${{ parameters.workingDirectory }}
+        targetType: 'inline'
+        script: |
+          pip3 install checkov
+    
+    - task: PowerShell@2
       displayName: terraform security scan 
       inputs:
         workingDirectory: ${{ parameters.workingDirectory }}
         targetType: 'inline'
         script: |
           pip3 install checkov
-          checkov -d $(System.DefaultWorkingDirectory) -o junitxml > $(System.DefaultWorkingDirectory)/Result.xml
-    
+          checkov -d $(System.DefaultWorkingDirectory) -o junitxml > $(System.DefaultWorkingDirectory)/result.xml
+           
+    - task: PublishTestResults@2
+      displayName: publish terraform scan 
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: 'result.xml'
+        
     - task: PowerShell@2
       displayName: detect any terraform change in the plan
       inputs:
