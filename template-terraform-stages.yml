@@ -23,7 +23,12 @@ stages:
       vmImage: ubuntu-latest
 
     steps:
-    
+    - task: Bash@3
+      displayName: checkov security scan
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker run --tty --rm --volume /user/tf:/tf --workdir /tf bridgecrew/checkov --directory /tf
     - task: TerraformInstaller@0
       displayName: install Terraform v0.12.28
       inputs:
@@ -50,35 +55,6 @@ stages:
         commandOptions: '-var environment=${{ parameters.environment }} -out=${{ parameters.backendAzureRmKey }}'
         environmentServiceNameAzureRM: ${{ parameters.backendServiceArm }}
     
-    - task: PowerShell@2
-      displayName: checkov install to tf security scan 
-      inputs:
-        workingDirectory: ${{ parameters.workingDirectory }}
-        targetType: 'inline'
-        script: |
-          pip3 install checkov
-    - task: Bash@3
-      displayName: install required testresources 
-      inputs:
-        targetType: 'inline'
-        script: |
-          sudo apt-get update
-          sudo apt-get install python3-testresources
-    - task: PowerShell@2
-      displayName: terraform security scan 
-      inputs:
-        workingDirectory: ${{ parameters.workingDirectory }}
-        targetType: 'inline'
-        script: |
-          pip3 install checkov
-          checkov -d $(System.DefaultWorkingDirectory) -o junitxml > $(System.DefaultWorkingDirectory)/result.xml
-           
-    - task: PublishTestResults@2
-      displayName: publish terraform scan 
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: 'result.xml'
-        
     - task: PowerShell@2
       displayName: detect any terraform change in the plan
       inputs:
