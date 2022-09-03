@@ -24,8 +24,8 @@ stages:
 
     steps:
     - script: |
-          docker run --tty --rm --volume $(System.DefaultWorkingDirectory)/${{ parameters.workingDirectory }}:/tf --workdir /tf bridgecrew/checkov --directory /tf
-      displayName: checkov security scan
+          docker run --tty --rm --volume $(System.DefaultWorkingDirectory)/${{ parameters.workingDirectory }}:/tf --workdir /tf bridgecrew/checkov --directory /tf --compact
+      displayName: static code analysis for terraform
   
         
     - task: TerraformInstaller@0
